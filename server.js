@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 8080;
 app.use(methodOverride("_method"));
 
 //set engine and default for handlebars
-app.engine("handlebars", exphbs({ defaultLayout: "main"}) );
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 //set body-parser
@@ -30,9 +30,12 @@ app.use(express.static(__dirname + "/public"));
 const routes = require("./controllers/burgers_controller");
 
 app.use("/", routes);
-app.use("/:id", routes);
+
+var db = require("./models");
 
 //Initiate the listener
-app.listen(PORT, function(){
-  console.log("http://localhost:" + PORT);
+db.sequelize.sync(/* { force: true } */).then(function () {
+  app.listen(PORT, function () {
+    console.log("http://localhost:" + PORT);
+  });
 });
